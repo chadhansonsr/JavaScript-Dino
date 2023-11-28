@@ -1,11 +1,32 @@
 
     // Create Dino Constructor
-
+    function Dino(species, weight, height, diet, where, when, fact) {
+        this.species = species;
+        this.weight = weight;
+        this.height = height;
+        this.diet = diet;
+        this.where = where;
+        this.when = when;
+        this.fact = fact;
+    }
 
     // Create Dino Objects
+    const dino = new Dino();
 
 
     // Create Human Object
+    function Human(species, weight, height, diet, where, when, fact) {
+        this.species = species;
+        this.weight = weight;
+        this.height = height;
+        this.diet = diet;
+        this.where = where;
+        this.when = when;
+        this.fact = fact;
+    }
+
+    const human = new Human();
+    
 
     // Use IIFE to get human data from form
 
