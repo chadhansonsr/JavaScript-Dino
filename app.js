@@ -1,5 +1,5 @@
 // Create Dino Constructor
-function Dino(species, weight, height, diet, where, when, fact) {
+function Dino(species, weight, height, diet, where, when, fact, image) {
     this.species = species;
     this.weight = weight;
     this.height = height;
@@ -7,17 +7,16 @@ function Dino(species, weight, height, diet, where, when, fact) {
     this.where = where;
     this.when = when;
     this.fact = fact;
+    this.image = image;
 }
 // Create Dino Objects
-const path = require('path');
-const fs = require('fs');
-
-const getDinoJson = () => {
-  const dinoData = fs.readFileSync(path.join(__dirname, 'dino.json'));
-  const jsonData = JSON.parse(dinoData);
+const getDinoJson = async () => {
+  const dinoData = await fetch('dino.json');
+  const jsonData = await dinoData.json();
   const dinosArray = jsonData.Dinos.map(dino => {
     let { species, weight, height, diet, where, when, fact } = dino;
-    return new Dino(species, weight, height, diet, where, when, fact);
+    let image = `images/${species.toLowerCase()}.png`;
+    return new Dino(species, weight, height, diet, where, when, fact, image);
   });
   return dinosArray;
 };
@@ -51,8 +50,21 @@ const human = new Human();
 // Generate Tiles for each Dino in Array
 const generateTiles = async () => {
     const dinosArray = await getDinoJson();
-    dinosArray.forEach(dino => {
+    const gridContainer = document.getElementById("grid");
 
+    dinosArray.forEach(dino => {
+      const tile = document.createElement("div");
+      tile.classList.add("grid-item");
+
+      const imageElement = document.createElement("img");
+      imageElement.src = dino.image;
+      tile.appendChild(imageElement);
+
+      const factElement = document.createElement("p");
+      factElement.textContent = dino.fact;
+      tile.appendChild(factElement);
+
+      gridContainer.appendChild(tile);
     });
 };
     // Add tiles to DOM
