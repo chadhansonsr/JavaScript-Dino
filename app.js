@@ -18,6 +18,7 @@ const getDinoJson = async () => {
     let image = `images/${species.toLowerCase()}.png`;
     return new Dino(species, weight, height, diet, where, when, fact, image);
   });
+
   return dinosArray;
 };
 
@@ -49,26 +50,53 @@ const human = new Human();
 
 // Generate Tiles for each Dino in Array
 const generateTiles = async () => {
-    const dinosArray = await getDinoJson();
-    const gridContainer = document.getElementById("grid");
+  const dinosArray = await getDinoJson();
+  const gridContainer = document.getElementById("grid");
 
-    dinosArray.forEach(dino => {
-      const tile = document.createElement("div");
-      tile.classList.add("grid-item");
+  // Clear the grid container
+  gridContainer.innerHTML = "";
 
-      const imageElement = document.createElement("img");
-      imageElement.src = dino.image;
-      tile.appendChild(imageElement);
+  const humanTile = document.createElement("div");
+  humanTile.classList.add("grid-item", "human");
 
-      const factElement = document.createElement("p");
-      factElement.textContent = dino.fact;
-      tile.appendChild(factElement);
+  const humanImageElement = document.createElement("img");
+  humanImageElement.src = "images/human.png";
+  humanTile.appendChild(humanImageElement);
 
-      gridContainer.appendChild(tile);
-    });
+  const nameInput = document.getElementById("name");
+  human.species = nameInput.value;
+
+  const humanFactElement = document.createElement("p");
+  humanTile.appendChild(humanFactElement);
+
+  // Calculate the middle index
+  const middleIndex = Math.floor(dinosArray.length / 2);
+
+  // Generate tiles for each dino in the array
+  dinosArray.forEach((dino, index) => {
+    const tile = document.createElement("div");
+    tile.classList.add("grid-item");
+
+    const imageElement = document.createElement("img");
+    imageElement.src = dino.image;
+    tile.appendChild(imageElement);
+
+    const factElement = document.createElement("p");
+    factElement.textContent = dino.fact;
+    tile.appendChild(factElement);
+
+    // Add the human tile to the middle of the grid
+    if (index === middleIndex) {
+      gridContainer.appendChild(humanTile);
+    }
+
+    gridContainer.appendChild(tile);
+  });
 };
-    // Add tiles to DOM
+
+// Add tiles to DOM
 generateTiles();
+
 // Remove form from screen
 
 
