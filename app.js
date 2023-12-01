@@ -34,15 +34,61 @@ const human = new Human();
 
 
 // Use IIFE to get human data from form
+(function() {
+  const form = document.getElementById('dino-compare');
 
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const nameInput = document.getElementById('name');
+    const weightInput = document.getElementById('weight');
+    const feetInput = document.getElementById('feet');
+    const inchesInput = document.getElement('inches');
+    const dietInput = document.getElement('diet');
+
+    const name = nameInput.value;
+    const weight = parseInt(weightInput.value);
+    const height = parseInt(feetInput.value) * 12 + parseInt(inchesInput.value);
+    const diet = dietInput.value;
+
+    human.species = name;
+    human.weight = weight;
+    human.height = height;
+    human.diet = diet;
+
+    form.reset();
+  });
+})();
 
 // Create Dino Compare Method 1
 // NOTE: Weight in JSON file is in lbs, height in inches. 
+Dino.prototype.compareWeight = function(humanWeight) {
+  const dinoWeight = this.weight;
+  const weightDifference = dinoWeight - humanWeight;
 
+  if (weightDifference > 0) {
+    return `The ${this.species} weighs ${weightDifference} pounds more than the human.`;
+  } else if (weightDifference < 0) {
+    return `The human weighs ${Math.abs(weightDifference)} pounds more than the ${this.species}.`;
+  } else {
+    return `The ${this.species} and the human weigh the same.`;
+  }
+}
 
 // Create Dino Compare Method 2
 // NOTE: Weight in JSON file is in lbs, height in inches.
+Dino.prototype.compareHeight = function(humanHeight) {
+  const dinoHeight = this.height;
+  const heightDifference = dinoHeight - humanHeight;
 
+  if (heightDifference > 0) {
+    return `The ${this.species} is ${heightDifference} inches taller than the human.`;
+  } else if (heightDifference < 0) {
+    return `The human is ${Math.abs(heightDifference)} inches taller than the ${this.species}.`;
+  } else {
+    return `The ${this.species} and the human are the same height.`;
+  }
+}
 
 // Create Dino Compare Method 3
 // NOTE: Weight in JSON file is in lbs, height in inches.
@@ -84,6 +130,9 @@ const generateTiles = async () => {
     const factElement = document.createElement("p");
     factElement.textContent = dino.fact;
     tile.appendChild(factElement);
+
+    console.log(dino.compareWeight(human.weight));
+    console.log(dino.compareHeight(human.height));
 
     // Add the human tile to the middle of the grid
     if (index === middleIndex) {
