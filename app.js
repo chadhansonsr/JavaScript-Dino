@@ -36,15 +36,16 @@ const human = new Human();
 // Use IIFE to get human data from form
 (function() {
   const form = document.getElementById('dino-compare');
+  const compareButton = document.getElementById('btn');
 
-  form.addEventListener('submit', function(event) {
+  compareButton.addEventListener('click', async function(event) {
     event.preventDefault();
 
     const nameInput = document.getElementById('name');
     const weightInput = document.getElementById('weight');
     const feetInput = document.getElementById('feet');
-    const inchesInput = document.getElement('inches');
-    const dietInput = document.getElement('diet');
+    const inchesInput = document.getElementById('inches');
+    const dietInput = document.getElementById('diet');
 
     const name = nameInput.value;
     const weight = parseInt(weightInput.value);
@@ -57,7 +58,17 @@ const human = new Human();
     human.diet = diet;
 
     form.reset();
-  });
+    
+// Call the async function to generate tiles and log comparisons
+const dinosArray = await generateTiles();
+generateTilesAndLogComparisons(dinosArray);
+});
+
+async function generateTilesAndLogComparisons(dinosArray) {
+  await generateTiles();
+  console.log(dinosArray.map(dino => dino.compareWeight(human.weight)));
+  console.log(dinosArray.map(dino => dino.compareHeight(human.height)));
+}
 })();
 
 // Create Dino Compare Method 1
@@ -109,8 +120,8 @@ const generateTiles = async () => {
   humanImageElement.src = "images/human.png";
   humanTile.appendChild(humanImageElement);
 
-  const nameInput = document.getElementById("name");
-  human.species = nameInput.value;
+  // const nameInput = document.getElementById("name");
+  // human.species = nameInput.value;
 
   const humanFactElement = document.createElement("p");
   humanTile.appendChild(humanFactElement);
@@ -131,8 +142,7 @@ const generateTiles = async () => {
     factElement.textContent = dino.fact;
     tile.appendChild(factElement);
 
-    console.log(dino.compareWeight(human.weight));
-    console.log(dino.compareHeight(human.height));
+
 
     // Add the human tile to the middle of the grid
     if (index === middleIndex) {
@@ -141,6 +151,8 @@ const generateTiles = async () => {
 
     gridContainer.appendChild(tile);
   });
+
+  return dinosArray;
 };
 
 // Add tiles to DOM
