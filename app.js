@@ -1,14 +1,15 @@
 // Create Dino Constructor
 function Dino(species, weight, height, diet, where, when, fact, image) {
-    this.species = species;
-    this.weight = weight;
-    this.height = height;
-    this.diet = diet;
-    this.where = where;
-    this.when = when;
-    this.fact = fact;
-    this.image = image;
+  this.species = species;
+  this.weight = weight;
+  this.height = height;
+  this.diet = diet;
+  this.where = where;
+  this.when = when;
+  this.fact = fact;
+  this.image = image;
 }
+
 // Create Dino Objects
 const getDinoJson = async () => {
   const dinoData = await fetch('dino.json');
@@ -24,21 +25,20 @@ const getDinoJson = async () => {
 
 // Create Human Object
 function Human(name, weight, height, diet) {
-    this.species = name;
-    this.weight = weight;
-    this.height = height;
-    this.diet = diet;
+  this.species = name;
+  this.weight = weight;
+  this.height = height;
+  this.diet = diet;
 }
 
 const human = new Human();
 
-
 // Use IIFE to get human data from form
-(function() {
+(() => {
   const form = document.getElementById('dino-compare');
   const compareButton = document.getElementById('btn');
 
-  compareButton.addEventListener('click', async function(event) {
+  compareButton.addEventListener('click', async (event) => {
     event.preventDefault();
 
     const nameInput = document.getElementById('name');
@@ -58,24 +58,16 @@ const human = new Human();
     human.diet = diet;
 
     form.reset();
-    
-// Call the async function to generate tiles and log comparisons
-const dinosArray = await generateTiles();
-generateTilesAndLogComparisons(dinosArray);
-});
 
-async function generateTilesAndLogComparisons(dinosArray) {
-  await generateTiles();
-  console.log(dinosArray.map(dino => dino.compareWeight(human.weight)));
-  console.log(dinosArray.map(dino => dino.compareHeight(human.height)));
-}
+    const dinosArray = await generateTiles();
+  });
 })();
 
 // Create Dino Compare Method 1
 // NOTE: Weight in JSON file is in lbs, height in inches. 
-Dino.prototype.compareWeight = function(humanWeight) {
+Dino.prototype.compareWeight = function() {
   const dinoWeight = this.weight;
-  const weightDifference = dinoWeight - humanWeight;
+  const weightDifference = dinoWeight - human.weight;
 
   if (weightDifference > 0) {
     return `The ${this.species} weighs ${weightDifference} pounds more than the human.`;
@@ -84,13 +76,13 @@ Dino.prototype.compareWeight = function(humanWeight) {
   } else {
     return `The ${this.species} and the human weigh the same.`;
   }
-}
+};
 
 // Create Dino Compare Method 2
 // NOTE: Weight in JSON file is in lbs, height in inches.
 Dino.prototype.compareHeight = function(humanHeight) {
   const dinoHeight = this.height;
-  const heightDifference = dinoHeight - humanHeight;
+  const heightDifference = dinoHeight - human.height;
 
   if (heightDifference > 0) {
     return `The ${this.species} is ${heightDifference} inches taller than the human.`;
@@ -99,7 +91,7 @@ Dino.prototype.compareHeight = function(humanHeight) {
   } else {
     return `The ${this.species} and the human are the same height.`;
   }
-}
+};
 
 // Create Dino Compare Method 3
 // NOTE: Weight in JSON file is in lbs, height in inches.
@@ -120,16 +112,12 @@ const generateTiles = async () => {
   humanImageElement.src = "images/human.png";
   humanTile.appendChild(humanImageElement);
 
-  // const nameInput = document.getElementById("name");
-  // human.species = nameInput.value;
-
   const humanFactElement = document.createElement("p");
+  humanFactElement.textContent = "";
   humanTile.appendChild(humanFactElement);
 
-  // Calculate the middle index
   const middleIndex = Math.floor(dinosArray.length / 2);
 
-  // Generate tiles for each dino in the array
   dinosArray.forEach((dino, index) => {
     const tile = document.createElement("div");
     tile.classList.add("grid-item");
@@ -142,9 +130,6 @@ const generateTiles = async () => {
     factElement.textContent = dino.fact;
     tile.appendChild(factElement);
 
-
-
-    // Add the human tile to the middle of the grid
     if (index === middleIndex) {
       gridContainer.appendChild(humanTile);
     }
@@ -155,10 +140,8 @@ const generateTiles = async () => {
   return dinosArray;
 };
 
-// Add tiles to DOM
 generateTiles();
 
 // Remove form from screen
-
 
 // On button click, prepare and display infographic
