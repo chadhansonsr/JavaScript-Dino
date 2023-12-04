@@ -12,16 +12,23 @@ function Dino(species, weight, height, diet, where, when, fact, image) {
 
 // Create Dino Objects
 const getDinoJson = async () => {
-  const dinoData = await fetch('dino.json');
-  const jsonData = await dinoData.json();
-  const dinosArray = jsonData.Dinos.map(dino => {
-    let { species, weight, height, diet, where, when, fact } = dino;
-    let image = `images/${species.toLowerCase()}.png`;
-    return new Dino(species, weight, height, diet, where, when, fact, image);
-  });
+  const response = await fetch('dino.json');
+  const jsonData = await response.json();
+  const dinosArray = [];
+
+  if (jsonData && jsonData.Dinos) {
+    for (let i = 0; i < 9; i++) {
+      const dino = jsonData.Dinos[i];
+      if (dino) {
+        let { species, weight, height, diet, where, when, fact } = dino;
+        let image = `images/${species.toLowerCase()}.png`;
+        dinosArray.push(new Dino(species, weight, height, diet, where, when, fact, image));
+      }
+    }
+  }
 
   return dinosArray;
-};
+}
 
 // Create Human Object
 function Human(name, weight, height, diet) {
@@ -58,8 +65,9 @@ const human = new Human();
     human.diet = diet;
 
     form.reset();
-    await displayInfo();
     removeForm();
+
+    await displayInfo();
   });
 })();
 
@@ -131,12 +139,25 @@ const generateTiles = async () => {
     const tile = document.createElement("div");
     tile.classList.add("grid-item");
 
+    const nameElement = document.createElement("h3");
+    nameElement.textContent = dino.species;
+    tile.appendChild(nameElement);
+
     const imageElement = document.createElement("img");
     imageElement.src = dino.image;
     tile.appendChild(imageElement);
 
     const factElement = document.createElement("p");
-    factElement.textContent = dino.fact;
+
+    // Add comparison information to the fact element
+    if (dino instanceof Dino) {
+      const weightComparison = dino.compareWeight();
+      const heightComparison = dino.compareHeight();
+      const dietComparison = dino.compareDiet();
+
+      factElement.textContent = `${weightComparison} ${heightComparison} ${dietComparison}`;
+    }
+
     tile.appendChild(factElement);
 
     if (index === middleIndex) {
@@ -161,6 +182,6 @@ function removeForm() {
 // On button click, prepare and display infographic
 async function displayInfo() {
   const dinosArray = await getDinoJson(); 
-  generateTiles(dinosArray);
+  await generateTiles();
   removeForm();
 };
