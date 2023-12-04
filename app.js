@@ -58,8 +58,8 @@ const human = new Human();
     human.diet = diet;
 
     form.reset();
-
-    const dinosArray = await generateTiles();
+    await displayInfo();
+    removeForm();
   });
 })();
 
@@ -80,7 +80,7 @@ Dino.prototype.compareWeight = function() {
 
 // Create Dino Compare Method 2
 // NOTE: Weight in JSON file is in lbs, height in inches.
-Dino.prototype.compareHeight = function(humanHeight) {
+Dino.prototype.compareHeight = function() {
   const dinoHeight = this.height;
   const heightDifference = dinoHeight - human.height;
 
@@ -95,7 +95,16 @@ Dino.prototype.compareHeight = function(humanHeight) {
 
 // Create Dino Compare Method 3
 // NOTE: Weight in JSON file is in lbs, height in inches.
+Dino.prototype.compareDiet = function() {
+  const dinoDiet = this.diet;
+  const humanDiet = human.diet;
 
+  if (dinoDiet === humanDiet) {
+    return `The ${this.species} is ${dinoDiet} just like the human.`;
+  } else {
+    return `The ${this.species} is ${this.diet} and the human is ${human.diet}.`;
+  }
+};
 
 // Generate Tiles for each Dino in Array
 const generateTiles = async () => {
@@ -140,8 +149,18 @@ const generateTiles = async () => {
   return dinosArray;
 };
 
+// Add tiles to DOM
 generateTiles();
 
 // Remove form from screen
+function removeForm() {
+  const form = document.querySelector("#dino-compare");
+  form.style.display = "none";
+};
 
 // On button click, prepare and display infographic
+async function displayInfo() {
+  const dinosArray = await getDinoJson(); 
+  generateTiles(dinosArray);
+  removeForm();
+};
