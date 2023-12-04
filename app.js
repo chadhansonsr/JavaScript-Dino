@@ -108,9 +108,9 @@ Dino.prototype.compareDiet = function() {
   const humanDiet = human.diet;
 
   if (dinoDiet === humanDiet) {
-    return `The ${this.species} is ${dinoDiet} just like the human.`;
+    return `The ${this.species} has the same diet as the human.`;
   } else {
-    return `The ${this.species} is ${this.diet} and the human is ${human.diet}.`;
+    return `The ${this.species} has a different diet than the human.`;
   }
 };
 
@@ -148,16 +148,7 @@ const generateTiles = async () => {
     tile.appendChild(imageElement);
 
     const factElement = document.createElement("p");
-
-    // Add comparison information to the fact element
-    if (dino instanceof Dino) {
-      const weightComparison = dino.compareWeight();
-      const heightComparison = dino.compareHeight();
-      const dietComparison = dino.compareDiet();
-
-      factElement.textContent = `${weightComparison} ${heightComparison} ${dietComparison}`;
-    }
-
+    factElement.textContent = dino.fact; // Display the dinosaur fact
     tile.appendChild(factElement);
 
     if (index === middleIndex) {
@@ -177,11 +168,26 @@ generateTiles();
 function removeForm() {
   const form = document.querySelector("#dino-compare");
   form.style.display = "none";
-};
+}
 
 // On button click, prepare and display infographic
 async function displayInfo() {
-  const dinosArray = await getDinoJson(); 
-  await generateTiles();
+  const dinosArray = await generateTiles();
+
+  // Compare the dinosaur and human after clicking the "Compare me" button
+  dinosArray.forEach((dino, index) => {
+    if (index !== Math.floor(dinosArray.length / 2)) {
+      const tile = Array.from(document.querySelectorAll('h3')).find(element => element.textContent === dino.species).parentNode;
+      const factElement = tile.querySelector("p");
+
+      const weightComparison = dino.compareWeight();
+      const heightComparison = dino.compareHeight();
+      const dietComparison = dino.compareDiet();
+
+      // Change the fact to the comparison information
+      factElement.textContent = `${weightComparison} ${heightComparison} ${dietComparison}`;
+    }
+  });
+
   removeForm();
-};
+}
