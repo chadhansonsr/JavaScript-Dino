@@ -67,7 +67,7 @@ const human = new Human();
     form.reset();
     removeForm();
 
-    await displayInfo();
+    displayInfo();
   });
 })();
 
@@ -125,6 +125,10 @@ const generateTiles = async () => {
   const humanTile = document.createElement("div");
   humanTile.classList.add("grid-item", "human");
 
+  const humanHeaderElement = document.createElement("h3");
+  humanHeaderElement.textContent = human.species; // Display the human name
+  humanTile.appendChild(humanHeaderElement);
+
   const humanImageElement = document.createElement("img");
   humanImageElement.src = "images/human.png";
   humanTile.appendChild(humanImageElement);
@@ -148,7 +152,7 @@ const generateTiles = async () => {
     tile.appendChild(imageElement);
 
     const factElement = document.createElement("p");
-    factElement.textContent = dino.fact; // Display the dinosaur fact
+    factElement.textContent = getRandomFact(dino); // Display a random fact or comparison
     tile.appendChild(factElement);
 
     if (index === middleIndex) {
@@ -157,12 +161,22 @@ const generateTiles = async () => {
 
     gridContainer.appendChild(tile);
   });
-
-  return dinosArray;
 };
 
-// Add tiles to DOM
-generateTiles();
+function getRandomFact(dino) {
+  const randomNumber = Math.floor(Math.random() * 3);
+
+  switch (randomNumber) {
+    case 0:
+      return dino.fact;
+    case 1:
+      return dino.compareWeight();
+    case 2:
+      return dino.compareHeight();
+    default:
+      return dino.fact;
+  }
+}
 
 // Remove form from screen
 function removeForm() {
@@ -172,22 +186,9 @@ function removeForm() {
 
 // On button click, prepare and display infographic
 async function displayInfo() {
-  const dinosArray = await generateTiles();
-
-  // Compare the dinosaur and human after clicking the "Compare me" button
-  dinosArray.forEach((dino, index) => {
-    if (index !== Math.floor(dinosArray.length / 2)) {
-      const tile = Array.from(document.querySelectorAll('h3')).find(element => element.textContent === dino.species).parentNode;
-      const factElement = tile.querySelector("p");
-
-      const weightComparison = dino.compareWeight();
-      const heightComparison = dino.compareHeight();
-      const dietComparison = dino.compareDiet();
-
-      // Change the fact to the comparison information
-      factElement.textContent = `${weightComparison} ${heightComparison} ${dietComparison}`;
-    }
-  });
-
+  generateTiles();
   removeForm();
 }
+
+// Call the generateTiles function to initially hide the tiles
+// generateTiles();
