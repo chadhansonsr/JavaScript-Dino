@@ -40,7 +40,7 @@ function Human(name, weight, height, diet) {
 
 const human = new Human();
 
-// Use IIFE to get human data from form
+// Create IIFE to get human data from form
 (() => {
   const form = document.getElementById('dino-compare');
   const compareButton = document.getElementById('btn');
@@ -71,8 +71,7 @@ const human = new Human();
   });
 })();
 
-// Create Dino Compare Method 1
-// NOTE: Weight in JSON file is in lbs, height in inches. 
+// Create Dino Compare Method for weight
 Dino.prototype.compareWeight = function() {
   const dinoWeight = this.weight;
   const weightDifference = dinoWeight - human.weight;
@@ -86,8 +85,7 @@ Dino.prototype.compareWeight = function() {
   }
 };
 
-// Create Dino Compare Method 2
-// NOTE: Weight in JSON file is in lbs, height in inches.
+// Create Dino Compare Method for height
 Dino.prototype.compareHeight = function() {
   const dinoHeight = this.height;
   const heightDifference = dinoHeight - human.height;
@@ -101,8 +99,7 @@ Dino.prototype.compareHeight = function() {
   }
 };
 
-// Create Dino Compare Method 3
-// NOTE: Weight in JSON file is in lbs, height in inches.
+// Create Dino Compare Method for diet
 Dino.prototype.compareDiet = function() {
   const dinoDiet = this.diet;
   const humanDiet = human.diet;
@@ -151,8 +148,9 @@ const generateTiles = async () => {
     imageElement.src = dino.image;
     tile.appendChild(imageElement);
 
+    // Display a random fact or comparison
     const factElement = document.createElement("p");
-    factElement.textContent = getRandomFact(dino); // Display a random fact or comparison
+    factElement.textContent = getRandomFact(dino); 
     tile.appendChild(factElement);
 
     if (index === middleIndex) {
@@ -163,6 +161,7 @@ const generateTiles = async () => {
   });
 };
 
+// Generate random number for fact/comparison determination
 function getRandomFact(dino) {
   const randomNumber = Math.floor(Math.random() * 3);
 
@@ -189,6 +188,3 @@ async function displayInfo() {
   generateTiles();
   removeForm();
 }
-
-// Call the generateTiles function to initially hide the tiles
-// generateTiles();
